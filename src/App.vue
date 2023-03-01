@@ -1,26 +1,75 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <Header @setCurrentComponent="setCurrentComponent" :currentComponent="currentComponent"/>
+  <component :is="currentComponent"></component>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from "@/components/Header";
+import Calculator from "@/components/Calculator";
+import Converter from "@/components/Converter";
+import {computed} from "vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    Calculator,
+    Converter,
+  },
+  data() {
+    return {
+      currentComponent: 'Calculator',
+      currentTheme: 'light',
+      themeClasses: {
+        main: true,
+        dark: false,
+      },
+      body: document.body,
+    }
+  },
+  provide() {
+    return {
+      theme: computed(() => this.currentTheme),
+      setTheme: this.changeTheme
+    }
+  },
+  watch: {
+    currentTheme() {
+      this.body.classList.toggle('dark')
+    }
+  },
+  created() {
+    this.body.classList.add('main')
+  },
+  methods: {
+    setCurrentComponent(name) {
+      this.currentComponent = name;
+    },
+
+    changeTheme(nameTheme) {
+      this.currentTheme = nameTheme;
+    }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  .main {
+    background: #f5f5f5;
+    transition-duration: 1s;
+  }
+
+  .dark {
+    background: #283637;
+  }
+
+  .light {
+    background: #f5f5f5!important;
+    transition-duration: 1s;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+  }
 </style>
