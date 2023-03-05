@@ -11,6 +11,7 @@
     "@jamescoyle/vue-icon": "^0.1.2",
     "@mdi/js": "^7.1.96",
     "core-js": "^3.8.3",
+    "moment": "^2.29.4",
     "vue": "^3.2.13"
   },
   "devDependencies": {

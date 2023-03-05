@@ -68,6 +68,10 @@ export default {
     transition-duration: 1s;
   }
 
+  .light::-webkit-scrollbar {
+    border: 1px solid black;
+  }
+
   body {
     margin: 0;
     padding: 0;
