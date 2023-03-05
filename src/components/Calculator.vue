@@ -197,7 +197,6 @@ export default {
   },
   methods: {
     eventNumpad(event) {
-      console.log(event);
       switch(event.code) {
         case 'Numpad1':
         case 'Numpad2':
