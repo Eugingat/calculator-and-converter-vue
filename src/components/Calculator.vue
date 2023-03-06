@@ -2,7 +2,8 @@
   <div :class="{ calc: true, light: isDark }">
     <input v-model="valueCalc" disabled :class="{fieldInput: true, inputLight: isDark}">
     <div :class="{ funcCalc: true }">
-      <button :class="{ btnCalc: true, btnLight: isDark }" v-for="({ symbol, icon , method, desciptionSymbol }) of listBtnCacl"
+      <button :class="{ btnCalc: true, btnLight: isDark }"
+              v-for="({ symbol, icon , method, desciptionSymbol }) of listBtnCacl"
               :key="symbol"
               @click="method(desciptionSymbol)"
               @mouseenter="mouseEnterBtn"
@@ -170,7 +171,7 @@ export default {
         {
           symbol: '.',
           icon: false,
-          method: this.generealMathOperation,
+          method: this.decimalSymbol,
           desciptionSymbol: '.'
         },
         {
@@ -193,11 +194,11 @@ export default {
     window.addEventListener('keyup', this.eventNumpad)
   },
   unmounted() {
-    window.removeEventListener('keyup',this.eventNumpad)
+    window.removeEventListener('keyup', this.eventNumpad)
   },
   methods: {
     eventNumpad(event) {
-      switch(event.code) {
+      switch (event.code) {
         case 'Numpad1':
         case 'Numpad2':
         case 'Numpad3':
@@ -235,7 +236,15 @@ export default {
       }
     },
     delLastValue() {
-      this.valueCalc = this.valueCalc.substring(0, this.valueCalc.length - 1)
+      if (this.valueCalc.includes('=')) {
+        this.valueCalc = this.valueCalc.split('=')[1].trim();
+      } else {
+        if (this.valueCalc.at(-1).trim()) {
+          this.valueCalc = this.valueCalc.substring(0, this.valueCalc.length - 1);
+        } else {
+          this.valueCalc = this.valueCalc.substring(0, this.valueCalc.length - 3);
+        }
+      }
     },
     addValue(value) {
       if (this.valueCalc === '0') {
@@ -270,6 +279,27 @@ export default {
         }
       }
     },
+    decimalSymbol() {
+      if (this.regExpGeneralMathSymbols.test(this.valueCalc)) {
+        const arrValue = this.valueCalc.split(this.regExpGeneralMathSymbols);
+
+        if (arrValue.at(-1)) {
+          const [operator] = this.valueCalc.match(this.regExpGeneralMathSymbols);
+
+          if (!arrValue.at(-1).includes('.')) {
+            arrValue[1] += '.';
+
+            this.valueCalc = arrValue.join(` ${operator} `);
+          }
+        } else {
+          this.valueCalc += '0.'
+        }
+      } else {
+        if (!this.valueCalc.includes('.')) {
+          this.valueCalc += '.';
+        }
+      }
+    },
     specMathOperation(specOperator) {
       const arrValue = this.valueCalc.split(this.regExpGeneralMathSymbols);
 
@@ -296,14 +326,14 @@ export default {
         case '1/x':
           return `${1 / value}`;
         case 'x2':
-          return `${value**2}`;
+          return `${value ** 2}`;
         case 'squareRoot':
           return `${Math.sqrt(value)}`;
         case 'plusMinusVariant':
           if (Math.sign(this.valueCalc)) {
-            return `${-1*value}`;
+            return `${-1 * value}`;
           } else {
-            return `${-1*value}`;
+            return `${-1 * value}`;
           }
       }
     },
@@ -400,7 +430,7 @@ export default {
 }
 
 .btnLight {
-  background: #f5f5f5!important;
+  background: #f5f5f5 !important;
   color: #009788;
 }
 </style>
